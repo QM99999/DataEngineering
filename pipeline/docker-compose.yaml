@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  pgdatabase:              # 服务名字，随便起
+    image: postgres:18     # 镜像版本
+    environment:           # 对应你的 -e 参数
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=ny_taxi
+    volumes:               # 对应你的 -v 参数
+      - ny_taxi_postgres_data:/var/lib/postgresql
+    ports:                 # 对应你的 -p 参数
+      - "5432:5432"
+    networks:
+      - pg-network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=root
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    ports:
+      - "8085:80"
+    networks:
+      - pg-network
+
+  taxi_ingest:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: taxi_ingest:v001
+    profiles: ["tools"] # 这个服务只在 tools profile 下启动
+    depends_on:
+      - pgdatabase
+    command: ["--pg-host", "pgdatabase", "--pg-db", "ny_taxi"]
+    networks:
+      - pg-network
+
+volumes:
+  ny_taxi_postgres_data:   # 声明你要用这个数据卷
+  pgadmin_data:
+
+networks:
+  pg-network:
+    external: true
