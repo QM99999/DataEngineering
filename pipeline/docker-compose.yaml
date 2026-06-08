@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   pgdatabase:              # 服务名字，随便起
     image: postgres:18     # 镜像版本
@@ -34,6 +32,19 @@ services:
     profiles: ["tools"] # 这个服务只在 tools profile 下启动
     depends_on:
       - pgdatabase
+    command: ["--pg-host", "pgdatabase", "--pg-db", "ny_taxi"]
+    networks:
+      - pg-network
+
+  taxi_zone:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: taxi_ingest:v001
+    profiles: ["tools"]
+    depends_on:
+      - pgdatabase
+    entrypoint: ["python", "taxi_zone.py"]
     command: ["--pg-host", "pgdatabase", "--pg-db", "ny_taxi"]
     networks:
       - pg-network
