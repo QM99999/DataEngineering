@@ -1,6 +1,7 @@
 *.parquet
 .venv/
 *.json
+.env
 
 
 

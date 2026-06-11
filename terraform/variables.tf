@@ -14,13 +14,13 @@ variable "project_id" {
 variable "region" {
   description = "The region in which to create resources."
   type        = string
-  default     = "us-central1"
+  default     = "europe-west3"
 }
 
 variable "location" {
   description = "The location of the resources."
   type        = string
-  default     = "US"
+  default     = "EU"
 }
 
 variable "bigquery_dataset_id" {
