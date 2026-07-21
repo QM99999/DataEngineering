@@ -1,0 +1,8 @@
+sources:
+  - name: raw
+    database: dataengineer-498819  # 👈 填入你最顶层的 GCP Project ID
+    schema: demo_dataset            # 👈 填入你的 BigQuery 数据集名称
+
+    tables:
+      - name: green_tripdata
+      - name: yellow_tripdata
